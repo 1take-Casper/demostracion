@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <script>
+        // Check local session before loading body
+        if(sessionStorage.getItem('atlas_admin_auth') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Panel Administrador - GIMNASIO ATLAS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..700&family=Lexend:wght@300..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF0000",
+                        "background": "#000000",
+                        "surface": "#000000",
+                        "surface-container": "#0E0E0E",
+                        "surface-container-high": "#131313",
+                        "outline": "#353535",
+                        "on-surface-variant": "#EBBBB4",
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0px"}
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { overflow-x: hidden; }
+    </style>
+</head>
+<body class="bg-background text-white font-body pb-20 selection:bg-primary">
+
+    <!-- Navbar -->
+    <header class="bg-surface-container-high fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 border-b-2 border-outline">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl">admin_panel_settings</span>
+            <h1 class="font-headline font-black italic tracking-widest text-lg uppercase hidden sm:block">
+                ATLAS <span class="text-on-surface-variant">ADMIN OS</span>
+            </h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="font-label text-xs uppercase tracking-widest hover:text-primary transition-colors flex items-center justify-center p-2 rounded-sm" title="Volver al Sitio">
+                <span class="material-symbols-outlined text-xl">open_in_new</span>
+            </a>
+            <button onclick="localStorage.removeItem('atlas_apps'); loadApps();" class="text-xs bg-outline text-white p-2 uppercase font-bold hover:bg-white hover:text-black transition-colors rounded-sm flex items-center justify-center" title="Borrar Registros">
+                <span class="material-symbols-outlined text-xl">delete_sweep</span>
+            </button>
+            <button onclick="sessionStorage.removeItem('atlas_admin_auth'); window.location.href='index.html';" class="text-xs bg-primary text-white px-4 py-2 uppercase font-bold hover:bg-white hover:text-primary transition-colors flex items-center gap-2 rounded-sm">
+                Salir <span class="material-symbols-outlined text-lg">logout</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="pt-24 px-6 max-w-7xl mx-auto min-h-screen">
+        
+        <div class="mb-12">
+            <h2 class="font-headline text-4xl sm:text-6xl font-bold uppercase tracking-tighter mb-2">PÚBLICO E <span class="text-primary italic">INSCRITOS</span></h2>
+            <p class="text-on-surface-variant font-label text-sm uppercase tracking-[0.2em] border-l-2 border-primary pl-4">Centro de control centralizado</p>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-surface-container p-8 border border-outline border-l-4 border-l-primary relative overflow-hidden group">
+                <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl text-white/5 group-hover:text-primary/10 transition-colors">group</span>
+                <p class="font-label text-xs text-on-surface-variant tracking-widest uppercase mb-2">Nuevos Prospectos</p>
+                <h3 id="stat-prospects" class="font-headline text-5xl font-bold text-white">0</h3>
+            </div>
+            <div class="bg-surface-container p-8 border border-outline border-l-4 border-l-[#353535] relative overflow-hidden">
+                <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl text-white/5">fitness_center</span>
+                <p class="font-label text-xs text-on-surface-variant tracking-widest uppercase mb-2">Total Atletas Activos</p>
+                <h3 class="font-headline text-5xl font-bold text-on-surface-variant">1,248</h3>
+            </div>
+            <div class="bg-surface-container p-8 border border-outline border-l-4 border-l-[#353535] relative overflow-hidden hidden lg:block">
+                <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl text-white/5">monitoring</span>
+                <p class="font-label text-xs text-on-surface-variant tracking-widest uppercase mb-2">Tasa de Conversión</p>
+                <h3 class="font-headline text-5xl font-bold text-on-surface-variant">84%</h3>
+            </div>
+        </div>
+
+        <!-- Table of Postulations -->
+        <h3 class="font-headline text-2xl font-bold uppercase tracking-tighter mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined">inbox</span> Solicitudes de Admisión
+        </h3>
+        
+        <div class="bg-surface-container border border-outline overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                    <tr class="bg-surface-container-high border-b border-outline">
+                        <th class="p-6 font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium">Fecha</th>
+                        <th class="p-6 font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium">Atleta</th>
+                        <th class="p-6 font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium">Contacto</th>
+                        <th class="p-6 font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium">Plan Objetivo</th>
+                        <th class="p-6 font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium text-right">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="app-table-body" class="divide-y divide-outline">
+                    <!-- Dinámicamente llenado por JS -->
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-on-surface-variant italic">No hay solicitudes nuevas. Esperando rendimiento élite...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script>
+        function loadApps() {
+            const tableBody = document.getElementById('app-table-body');
+            const apps = JSON.parse(localStorage.getItem('atlas_apps') || '[]');
+            
+            document.getElementById('stat-prospects').innerText = apps.length;
+
+            if (apps.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-12 text-center text-on-surface-variant font-body text-sm"><span class="material-symbols-outlined block mb-2 text-4xl opacity-30">hourglass_empty</span> No hay solicitudes nuevas ingresadas desde la página principal.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = '';
+            // Invert array to show newest first
+            apps.slice().reverse().forEach((app, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-surface-container-high transition-colors group cursor-default';
+                
+                tr.innerHTML = `
+                    <td class="p-6 text-sm text-[#EBBBB4] whitespace-nowrap">${app.date}</td>
+                    <td class="p-6 font-headline font-bold uppercase whitespace-nowrap">${app.name}</td>
+                    <td class="p-6 text-sm font-body"><a href="mailto:${app.email}" class="hover:text-primary transition-colors hover:underline">${app.email}</a></td>
+                    <td class="p-6 whitespace-nowrap">
+                        <span class="bg-[#131313] border border-outline text-[10px] font-label font-bold uppercase tracking-widest px-3 py-1">
+                            ${app.plan}
+                        </span>
+                    </td>
+                    <td class="p-6 text-right whitespace-nowrap">
+                        <button onclick="removeApp(${app.id})" class="text-outline hover:text-primary transition-colors focus:outline-none flex items-center gap-1 justify-end ml-auto group-hover:text-white group-hover:hover:text-primary">
+                            <span class="material-symbols-outlined text-xl">delete</span>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function removeApp(id) {
+            let apps = JSON.parse(localStorage.getItem('atlas_apps') || '[]');
+            apps = apps.filter(a => a.id !== id);
+            localStorage.setItem('atlas_apps', JSON.stringify(apps));
+            loadApps();
+        }
+
+        // Initialize table
+        loadApps();
+    </script>
+</body>
+</html>
